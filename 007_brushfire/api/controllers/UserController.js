@@ -9,6 +9,26 @@ var Passwords = require('machinepack-passwords');
 var Gravatar = require('machinepack-gravatar');
 
 module.exports = {
+
+  profile : function(req, res) {
+    User.findOne(req.param('id')).exec(function(err, user){
+      if (err) { return res.negotiate(err); }
+
+      if (!user) { return res.notFound(); }
+
+      var options = {
+        email : user.email,
+        username : user.username,
+        gravatarURL : user.gravatarURL,
+        deleted : user.deleted,
+        admin: user.admin,
+        banned: user.banned,
+        id : user.id
+      };
+      res.json(options);
+    });
+  },
+
   signup: function (req, res) {
     if (_.isUndefined(req.param('email'))) {
       return res.badRequest('An email address is required!');
