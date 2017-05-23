@@ -60,7 +60,15 @@ module.exports = {
                 password: result,
                 gravatarURL: gravatarURL
               };
-              return res.json(options);
+              // adding the user to the User Table
+              User.create(options).exec(
+                function(err, createdUser) {
+                  if (err) {
+                    return res.serverError(err);
+                  }
+                  return res.json(createdUser);
+                }
+              );
             } catch (err) {
               return res.serverError(err);
             }
